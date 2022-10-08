@@ -80,7 +80,7 @@ const computeCompBorrowRewardsAPY = (marketFromGraph, compPrice) => {
   return rateToAPY(compRate);
 };
 
-const main = async () => {
+module.exports = async () => {
   const data = (await request(subgraphMorphoCompound, query)).markets;
   const compMarket = data.find((market) => market.token.address === compToken);
   const compPrice = compMarket.reserveData.usd / 1e18;
@@ -149,12 +149,7 @@ const main = async () => {
       totalSupplyUsd: tvlUsd,
       totalBorrowUsd: tvlBorrow,
       ltv: marketFromGraph.reserveData.collateralFactor / 1e18,
+      poolMeta: 'Morpho Compound',
     };
   });
-};
-
-module.exports = {
-  timetravel: false,
-  apy: main,
-  url: 'https://compound.morpho.xyz',
 };

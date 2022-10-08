@@ -43,7 +43,7 @@ const query = gql`
 const rateToAPY = (ratePerYear) =>
   Math.pow(1 + ratePerYear / SECONDS_PER_YEAR, SECONDS_PER_YEAR) - 1;
 
-const main = async () => {
+module.exports = async () => {
   const data = (await request(subgraphMorphoCompound, query)).markets;
   const usdcMarket = data.find((market) => market.token.address === usdcToken);
   const ethPrice = usdcMarket.reserveData.eth / 1e18; // ETH / USDC price used to convert ETH to USD later
@@ -104,12 +104,7 @@ const main = async () => {
       totalSupplyUsd: tvlUsd,
       totalBorrowUsd: tvlBorrow,
       ltv: marketFromGraph.reserveData.ltv / 1e4,
+      poolMeta: 'Morpho Aave',
     };
   });
-};
-
-module.exports = {
-  timetravel: false,
-  apy: main,
-  url: 'https://aave.morpho.xyz',
 };
